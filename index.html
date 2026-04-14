@@ -3,1134 +3,538 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KOVA — Crisis Briefing | S8 Leadership Simulation</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>KOVA Crisis Simulation — S8 Leadership Activity</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #080c10;
-    --surface: #0e1419;
-    --surface2: #141b22;
-    --border: #1e2a35;
-    --red: #e8342a;
-    --red-dim: rgba(232,52,42,0.12);
-    --red-glow: rgba(232,52,42,0.25);
-    --text: #c8d8e8;
-    --text-dim: #5a7080;
-    --text-bright: #eaf2f8;
-    --green: #2aе834;
-    --accent: #00b4d8;
-    --accent-dim: rgba(0,180,216,0.1);
-    --mono: 'DM Mono', monospace;
-    --display: 'Syne', sans-serif;
-    --body: 'DM Sans', sans-serif;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--body);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* Grid background */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,180,216,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,180,216,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 24px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* HEADER */
-  header {
-    padding: 40px 0 32px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .logo {
-    font-family: var(--display);
-    font-weight: 800;
-    font-size: 28px;
-    letter-spacing: -0.5px;
-    color: var(--text-bright);
-  }
-
-  .logo span {
-    color: var(--red);
-  }
-
-  .status-pill {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--red-dim);
-    border: 1px solid var(--red);
-    border-radius: 100px;
-    padding: 6px 14px;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--red);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    animation: pulse-border 2s ease-in-out infinite;
-  }
-
-  .status-dot {
-    width: 7px;
-    height: 7px;
-    background: var(--red);
-    border-radius: 50%;
-    animation: blink 1.2s ease-in-out infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.2; }
-  }
-
-  @keyframes pulse-border {
-    0%, 100% { box-shadow: 0 0 0 0 var(--red-glow); }
-    50% { box-shadow: 0 0 12px 2px var(--red-glow); }
-  }
-
-  /* HERO */
-  .hero {
-    padding: 52px 0 40px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .overline {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 16px;
-  }
-
-  h1 {
-    font-family: var(--display);
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 800;
-    line-height: 1.05;
-    color: var(--text-bright);
-    letter-spacing: -1px;
-    margin-bottom: 20px;
-  }
-
-  h1 em {
-    color: var(--red);
-    font-style: normal;
-  }
-
-  .hero-desc {
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--text-dim);
-    max-width: 580px;
-    font-weight: 300;
-  }
-
-  /* META ROW */
-  .meta-row {
-    display: flex;
-    gap: 24px;
-    margin-top: 32px;
-    flex-wrap: wrap;
-  }
-
-  .meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .meta-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
-
-  .meta-value {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--text-bright);
-  }
-
-  /* INSTRUCTIONS */
-  .instructions {
-    padding: 36px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .section-title {
-    font-family: var(--display);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 20px;
-  }
-
-  .steps {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .step {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-    padding: 14px 18px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    transition: border-color 0.2s;
-  }
-
-  .step:hover { border-color: var(--accent); }
-
-  .step-num {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--accent);
-    min-width: 24px;
-    padding-top: 1px;
-  }
-
-  .step-text {
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text);
-    font-weight: 300;
-  }
-
-  .step-text strong {
-    color: var(--text-bright);
-    font-weight: 500;
-  }
-
-  /* AUDIO PLAYER */
-  .audio-section {
-    padding: 36px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .player-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .now-playing {
-    padding: 20px 24px;
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    min-height: 72px;
-  }
-
-  .playing-icon {
-    width: 40px;
-    height: 40px;
-    background: var(--red-dim);
-    border: 1px solid var(--red);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .playing-icon svg {
-    width: 16px;
-    height: 16px;
-    fill: var(--red);
-  }
-
-  .playing-icon.idle {
-    background: rgba(0,180,216,0.08);
-    border-color: var(--accent);
-  }
-
-  .playing-icon.idle svg { fill: var(--accent); }
-
-  .now-playing-info { flex: 1; }
-
-  .now-playing-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    margin-bottom: 4px;
-  }
-
-  .now-playing-name {
-    font-family: var(--display);
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-bright);
-  }
-
-  .now-playing-role {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-top: 2px;
-  }
-
-  .track-counter {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-
-  /* Progress bar */
-  .progress-wrap {
-    padding: 0 24px;
-    padding-top: 20px;
-  }
-
-  .progress-bar-bg {
-    height: 3px;
-    background: var(--border);
-    border-radius: 3px;
-    cursor: pointer;
-    position: relative;
-  }
-
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--red);
-    border-radius: 3px;
-    width: 0%;
-    transition: width 0.1s linear;
-    position: relative;
-  }
-
-  .progress-bar-fill::after {
-    content: '';
-    position: absolute;
-    right: -4px;
-    top: -4px;
-    width: 10px;
-    height: 10px;
-    background: var(--red);
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .progress-bar-bg:hover .progress-bar-fill::after { opacity: 1; }
-
-  .time-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0 0;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-
-  /* Controls */
-  .controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 20px 24px 24px;
-  }
-
-  .ctrl-btn {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    cursor: pointer;
-    padding: 10px 14px;
-    font-family: var(--mono);
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-  }
-
-  .ctrl-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-dim);
-  }
-
-  .ctrl-btn svg {
-    width: 14px;
-    height: 14px;
-    fill: currentColor;
-  }
-
-  .play-btn {
-    background: var(--red);
-    border-color: var(--red);
-    color: white;
-    padding: 12px 28px;
-    font-size: 13px;
-    font-weight: 500;
-    border-radius: 8px;
-  }
-
-  .play-btn:hover {
-    background: #c42820;
-    border-color: #c42820;
-    color: white;
-  }
-
-  /* Track list */
-  .track-list {
-    border-top: 1px solid var(--border);
-  }
-
-  .track-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 24px;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-
-  .track-item:last-child { border-bottom: none; }
-  .track-item:hover { background: var(--surface2); }
-  .track-item.active { background: var(--red-dim); }
-  .track-item.played { opacity: 0.5; }
-
-  .track-num {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-    min-width: 20px;
-  }
-
-  .track-item.active .track-num { color: var(--red); }
-
-  .track-info { flex: 1; }
-
-  .track-name {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-bright);
-  }
-
-  .track-role {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 2px;
-  }
-
-  .track-duration {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-
-  /* GROUP SELECTOR */
-  .group-section {
-    padding: 36px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .select-wrap {
-    position: relative;
-    margin-top: 16px;
-  }
-
-  select {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text-bright);
-    font-family: var(--display);
-    font-size: 16px;
-    font-weight: 600;
-    padding: 16px 20px;
-    appearance: none;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-
-  select:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
-
-  .select-arrow {
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    color: var(--text-dim);
-  }
-
-  /* ROLE BRIEFING */
-  .briefing-card {
-    display: none;
-    margin-top: 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    animation: fadeUp 0.3s ease;
-  }
-
-  .briefing-card.visible { display: block; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .briefing-header {
-    padding: 20px 24px;
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .briefing-group-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-
-  .briefing-role-title {
-    font-family: var(--display);
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--text-bright);
-    margin-top: 4px;
-  }
-
-  .briefing-badge {
-    background: var(--accent-dim);
-    border: 1px solid var(--accent);
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .briefing-body {
-    padding: 24px;
-  }
-
-  .briefing-objective {
-    background: var(--red-dim);
-    border: 1px solid rgba(232,52,42,0.3);
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin-bottom: 24px;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text);
-  }
-
-  .briefing-objective strong {
-    color: var(--red);
-    display: block;
-    font-family: var(--mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 6px;
-  }
-
-  .present-title {
-    font-family: var(--mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    margin-bottom: 14px;
-  }
-
-  .present-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .present-list li {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text);
-    padding: 12px 16px;
-    background: var(--surface2);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    font-weight: 300;
-  }
-
-  .present-list li strong {
-    color: var(--text-bright);
-    font-weight: 500;
-  }
-
-  .li-arrow {
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 12px;
-    padding-top: 2px;
-    flex-shrink: 0;
-  }
-
-  /* FOOTER */
-  footer {
-    padding: 32px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-
-  /* Waveform animation */
-  .waveform {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    height: 20px;
-  }
-
-  .wave-bar {
-    width: 3px;
-    background: var(--red);
-    border-radius: 3px;
-    animation: wave 1.2s ease-in-out infinite;
-  }
-
-  .wave-bar:nth-child(1) { animation-delay: 0s; }
-  .wave-bar:nth-child(2) { animation-delay: 0.15s; }
-  .wave-bar:nth-child(3) { animation-delay: 0.3s; }
-  .wave-bar:nth-child(4) { animation-delay: 0.15s; }
-  .wave-bar:nth-child(5) { animation-delay: 0s; }
-
-  @keyframes wave {
-    0%, 100% { height: 4px; }
-    50% { height: 18px; }
-  }
-
-  .waveform.paused .wave-bar { animation-play-state: paused; }
-
-  @media (max-width: 600px) {
-    .meta-row { gap: 16px; }
-    .header-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .controls { flex-wrap: wrap; }
-    .briefing-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    --navy:        #0d2340;
+    --navy-mid:    #1a3a5c;
+    --navy-light:  #edf1f7;
+    --blue:        #1a6bb5;
+    --blue-light:  #e8f1fa;
+    --purple:      #6b3fa0;
+    --purple-light:#f0eaf8;
+    --purple-mid:  rgba(107,63,160,0.12);
+    --white:       #ffffff;
+    --bg:          #f5f7fa;
+    --text:        #1a2535;
+    --text-mid:    #4a5a6e;
+    --text-light:  #8a9aaa;
+    --border:      #dce4ed;
+    --shadow:      0 1px 6px rgba(13,35,64,0.07);
+    --radius:      10px;
+    --display:     'Outfit', sans-serif;
+    --body:        'DM Sans', sans-serif;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--body); font-size:15px; line-height:1.65; }
+
+  /* ── TOP BAR ── */
+  .topbar { background:var(--navy); color:rgba(255,255,255,0.42); font-family:var(--display); font-size:12px; letter-spacing:0.04em; padding:9px 32px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+
+  /* ── HEADER ── */
+  header { background:var(--white); border-bottom:3px solid var(--navy); padding:16px 32px; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow); flex-wrap:wrap; gap:12px; }
+  .logo { font-family:var(--display); font-size:26px; font-weight:800; color:var(--navy); letter-spacing:-0.5px; }
+  .logo em { color:var(--blue); font-style:normal; }
+  .logo-sub { font-size:11px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.07em; margin-top:2px; font-family:var(--display); }
+  .session-pill { background:var(--navy); color:white; font-family:var(--display); font-size:12px; font-weight:600; padding:7px 18px; border-radius:100px; }
+
+  /* ── HERO ── */
+  .hero { background:linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); color:white; padding:48px 32px; position:relative; overflow:hidden; }
+  .hero::after { content:''; position:absolute; right:-80px; top:-80px; width:320px; height:320px; border-radius:50%; background:var(--purple); opacity:0.18; pointer-events:none; }
+  .hero-inner { max-width:860px; margin:0 auto; position:relative; z-index:1; }
+  .hero-tag { display:inline-block; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); color:white; font-family:var(--display); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.09em; padding:5px 14px; border-radius:100px; margin-bottom:18px; }
+  .hero h1 { font-family:var(--display); font-size:clamp(26px,4vw,40px); font-weight:800; line-height:1.1; letter-spacing:-0.5px; margin-bottom:14px; }
+  .hero h1 em { color:#7ab8f5; font-style:normal; }
+  .hero-sub { font-size:15px; font-weight:300; line-height:1.75; color:rgba(255,255,255,0.65); max-width:520px; margin-bottom:28px; }
+  .hero-stats { display:flex; gap:28px; flex-wrap:wrap; }
+  .stat-val { font-family:var(--display); font-size:36px; font-weight:800; color:#7ab8f5; line-height:1; }
+  .stat-label { font-size:11px; color:rgba(255,255,255,0.42); text-transform:uppercase; letter-spacing:0.06em; font-weight:300; }
+
+  /* ── MAIN ── */
+  main { max-width:860px; margin:0 auto; padding:32px 32px 60px; display:flex; flex-direction:column; gap:22px; }
+
+  /* ── CARD ── */
+  .card { background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+  .card-header { background:var(--navy); color:white; padding:14px 24px; display:flex; align-items:center; gap:12px; }
+  .card-num { background:rgba(255,255,255,0.13); width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:800; font-size:13px; flex-shrink:0; }
+  .card-title { font-family:var(--display); font-size:15px; font-weight:700; }
+  .card-body { padding:24px; }
+
+  /* ── TEXT ── */
+  .intro-text { font-size:15px; line-height:1.75; color:var(--text-mid); margin-bottom:16px; font-weight:300; }
+  .intro-text:last-child { margin-bottom:0; }
+  .intro-text strong { color:var(--text); font-weight:600; }
+
+  .scenario-box { background:var(--navy-light); border-left:4px solid var(--navy); border-radius:0 8px 8px 0; padding:18px 20px; margin-top:16px; }
+  .scenario-box h3 { font-family:var(--display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--navy); margin-bottom:8px; }
+  .scenario-box p { font-size:14px; line-height:1.72; color:var(--text-mid); font-weight:300; }
+  .scenario-box p strong { color:var(--text); font-weight:500; }
+  .notice { margin-top:14px; font-size:14px; line-height:1.6; color:var(--text-mid); font-weight:300; }
+  .notice strong { color:var(--text); font-weight:600; }
+
+  /* ── STEPS — typographic, no blocks ── */
+  .steps-list { list-style:none; display:flex; flex-direction:column; gap:14px; }
+  .steps-list li { display:flex; gap:16px; align-items:flex-start; font-size:14px; line-height:1.65; color:var(--text-mid); font-weight:300; }
+  .steps-list li strong { color:var(--text); font-weight:600; }
+  .step-n {
+    font-family:var(--display);
+    font-size:13px; font-weight:700;
+    color:var(--purple);
+    min-width:22px;
+    padding-top:1px;
+    flex-shrink:0;
+  }
+  .step-rule { width:1px; background:var(--border); align-self:stretch; margin-left:10px; flex-shrink:0; }
+
+  /* ── TRACK LIST — clean rows, no heavy avatars ── */
+  .track-list { display:flex; flex-direction:column; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:20px; }
+  .track-row { display:flex; align-items:center; gap:14px; padding:13px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .14s; background:var(--white); }
+  .track-row:last-child { border-bottom:none; }
+  .track-row:hover { background:var(--bg); }
+  .track-row.active { background:var(--purple-light); }
+  .track-row.played { opacity:0.48; }
+
+  /* dot + initials — lightweight */
+  .track-dot {
+    width:8px; height:8px; border-radius:50%;
+    background:var(--border);
+    flex-shrink:0; transition:background .14s;
+  }
+  .track-row.active .track-dot { background:var(--purple); }
+  .track-row.played .track-dot { background:var(--text-light); }
+
+  .track-initials {
+    font-family:var(--display); font-size:12px; font-weight:700;
+    color:var(--text-light); min-width:26px;
+    flex-shrink:0; transition:color .14s;
+  }
+  .track-row.active .track-initials { color:var(--purple); }
+
+  .track-info { flex:1; min-width:0; }
+  .track-name { font-family:var(--display); font-size:14px; font-weight:600; color:var(--text); }
+  .track-name span { color:var(--text-light); font-weight:400; font-size:13px; }
+  .track-meta { font-size:12px; color:var(--text-light); margin-top:1px; }
+
+  .track-msg-pill {
+    font-family:var(--display); font-size:11px; font-weight:600;
+    color:var(--text-light); white-space:nowrap;
+    transition:color .14s;
+  }
+  .track-row.active .track-msg-pill { color:var(--purple); }
+
+  /* ── PLAYER ── */
+  .player-wrap { background:var(--navy); border-radius:var(--radius); padding:20px; color:white; }
+  .now-playing { display:flex; align-items:center; gap:12px; margin-bottom:14px; min-height:44px; }
+  .play-avatar { width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:700; font-size:12px; flex-shrink:0; color:rgba(255,255,255,0.7); letter-spacing:0.02em; }
+  .now-label { font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.35); font-family:var(--display); font-weight:600; margin-bottom:2px; }
+  .now-name { font-family:var(--display); font-size:14px; font-weight:700; }
+  .now-role { font-size:12px; color:rgba(255,255,255,0.4); font-weight:300; margin-top:1px; }
+  .waveform { display:flex; align-items:center; gap:3px; height:20px; margin-left:auto; margin-right:6px; }
+  .wb { width:3px; background:#b39ddb; border-radius:3px; animation:wv 1.1s ease-in-out infinite; }
+  .wb:nth-child(1){animation-delay:0s} .wb:nth-child(2){animation-delay:.18s} .wb:nth-child(3){animation-delay:.36s} .wb:nth-child(4){animation-delay:.18s} .wb:nth-child(5){animation-delay:0s}
+  @keyframes wv{0%,100%{height:4px}50%{height:18px}}
+  .waveform.paused .wb { animation-play-state:paused; height:4px; }
+  .msg-count { font-family:var(--display); font-size:12px; color:rgba(255,255,255,0.28); }
+  .progress-bg { height:3px; background:rgba(255,255,255,0.1); border-radius:3px; cursor:pointer; margin-bottom:7px; }
+  .progress-fill { height:100%; background:var(--purple); border-radius:3px; width:0%; transition:width .1s linear; }
+  .time-row { display:flex; justify-content:space-between; font-family:var(--display); font-size:11px; color:rgba(255,255,255,0.28); margin-bottom:16px; }
+  .controls { display:flex; align-items:center; justify-content:center; gap:10px; }
+  .ctrl { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.6); border-radius:7px; padding:9px 16px; font-family:var(--display); font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .14s; }
+  .ctrl:hover { background:rgba(255,255,255,0.12); color:white; }
+  .ctrl svg { width:13px; height:13px; fill:currentColor; }
+  .ctrl.primary { background:var(--purple); border-color:var(--purple); color:white; padding:10px 28px; font-size:14px; }
+  .ctrl.primary:hover { background:#5a3387; }
+
+  /* ── GROUP SELECT ── */
+  .group-intro { font-size:15px; color:var(--text-mid); line-height:1.7; margin-bottom:16px; font-weight:300; }
+  .group-intro strong { color:var(--text); font-weight:600; }
+  .select-wrap { position:relative; margin-bottom:20px; }
+  select { width:100%; appearance:none; background:var(--white); border:2px solid var(--border); border-radius:var(--radius); color:var(--text); font-family:var(--display); font-size:16px; font-weight:600; padding:14px 46px 14px 18px; cursor:pointer; transition:border-color .2s; }
+  select:focus { outline:none; border-color:var(--purple); }
+  .sel-icon { position:absolute; right:16px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--text-light); }
+
+  /* ── BRIEF ── */
+  .briefing-card { display:none; animation:fadeUp .28s ease; }
+  .briefing-card.visible { display:block; }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  .role-header { background:var(--navy); border-radius:var(--radius) var(--radius) 0 0; padding:20px 24px; color:white; display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+  .role-group-tag { font-family:var(--display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#b39ddb; margin-bottom:4px; }
+  .role-title { font-family:var(--display); font-size:19px; font-weight:800; }
+  .role-desc { font-size:13px; color:rgba(255,255,255,0.45); margin-top:3px; font-weight:300; }
+  .role-badge { background:var(--purple); color:white; font-family:var(--display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:5px 13px; border-radius:100px; white-space:nowrap; flex-shrink:0; }
+
+  .role-body { background:var(--white); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--radius) var(--radius); overflow:hidden; }
+  .rblock { padding:18px 24px; border-bottom:1px solid var(--border); }
+  .rblock:last-child { border-bottom:none; }
+  .rblock.tinted { background:var(--navy-light); }
+  .rblock h4 { font-family:var(--display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--navy); margin-bottom:10px; }
+  .rblock p { font-size:14px; line-height:1.72; color:var(--text-mid); font-weight:300; }
+  .rblock p strong { color:var(--text); font-weight:500; }
+
+  .msg-tags { display:flex; flex-wrap:wrap; gap:7px; }
+  .msg-tag { background:var(--purple-light); border:1px solid rgba(107,63,160,0.18); border-radius:100px; padding:5px 12px; font-size:13px; font-weight:500; color:var(--purple); font-family:var(--display); display:flex; align-items:center; gap:6px; }
+  .msg-tag span { background:var(--purple); color:white; border-radius:100px; padding:1px 7px; font-size:11px; font-weight:700; }
+
+  /* present list — typographic numbers, no blocks */
+  .present-list { list-style:none; display:flex; flex-direction:column; gap:0; }
+  .present-list li { display:flex; gap:16px; align-items:flex-start; padding:13px 0; border-bottom:1px solid var(--border); font-size:14px; line-height:1.65; color:var(--text-mid); font-weight:300; }
+  .present-list li:last-child { border-bottom:none; padding-bottom:0; }
+  .present-list li:first-child { padding-top:0; }
+  .present-list li strong { color:var(--text); font-weight:600; display:block; margin-bottom:1px; }
+  .q-num { font-family:var(--display); font-size:13px; font-weight:700; color:var(--purple); min-width:20px; padding-top:1px; flex-shrink:0; }
+
+  /* ── FOOTER ── */
+  footer { background:var(--navy); color:rgba(255,255,255,0.32); text-align:center; padding:20px; font-size:12px; font-family:var(--display); }
+  footer strong { color:rgba(255,255,255,0.55); }
+
+  @media(max-width:600px){
+    header,main,.topbar{padding-left:18px;padding-right:18px;}
+    .hero{padding:36px 18px;}
+    .role-header{flex-direction:column;}
+    .controls{flex-wrap:wrap;}
   }
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="topbar">
+  <span>MS2 EFI — English for International Business</span>
+  <span>Session 8 &nbsp;·&nbsp; Leadership Simulation Lab</span>
+</div>
 
-  <!-- HEADER -->
-  <header>
-    <div class="header-inner">
-      <div class="logo">KO<span>VA</span></div>
-      <div class="status-pill">
-        <div class="status-dot"></div>
-        Crisis Protocol Active
-      </div>
+<header>
+  <div>
+    <div class="logo">KO<em>VA</em></div>
+    <div class="logo-sub">Crisis Simulation &nbsp;·&nbsp; S8</div>
+  </div>
+  <div class="session-pill">Leadership Under Pressure</div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">⚠ Critical Incident — 48 Hours to Launch</div>
+    <h1>A Crisis is Unfolding at KOVA.<br>Your Team Must <em>Decide.</em></h1>
+    <p class="hero-sub">KOVA builds software for hospitals. A serious problem has just been discovered — 48 hours before their biggest ever product launch. Listen to the voice messages. Understand what happened. Then, as a leadership team, decide what to do.</p>
+    <div class="hero-stats">
+      <div><div class="stat-val">5</div><div class="stat-label">Voice Messages</div></div>
+      <div><div class="stat-val">48h</div><div class="stat-label">Until Launch</div></div>
+      <div><div class="stat-val">5</div><div class="stat-label">Roles</div></div>
     </div>
-  </header>
+  </div>
+</div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="overline">S8 — Leadership Simulation Lab</div>
-    <h1>Leadership<br>Under <em>Pressure</em></h1>
-    <p class="hero-desc">
-      A critical fault has been discovered in KOVA Shift 3.0, 48 hours before launch. 
-      Listen to the internal briefings. Then, as a leadership team, decide what happens next.
-    </p>
-    <div class="meta-row">
-      <div class="meta-item">
-        <span class="meta-label">Date</span>
-        <span class="meta-value">Tuesday 14 April</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Time to Launch</span>
-        <span class="meta-value">48 hours</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Severity</span>
-        <span class="meta-value" style="color:var(--red)">Critical — Patient Safety</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Messages</span>
-        <span class="meta-value">5 Internal Briefings</span>
-      </div>
+<main>
+
+  <!-- 1 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-num">1</div>
+      <div class="card-title">What Is This Activity?</div>
     </div>
-  </section>
-
-  <!-- INSTRUCTIONS -->
-  <section class="instructions">
-    <div class="section-title">How This Works</div>
-    <div class="steps">
-      <div class="step">
-        <span class="step-num">01</span>
-        <span class="step-text"><strong>Listen carefully.</strong> Press play and listen to all 5 internal messages. You may listen twice. Take notes — details matter.</span>
+    <div class="card-body">
+      <p class="intro-text">In this activity, you will practise <strong>leadership and management skills</strong> in a realistic business scenario. You will listen to a series of <strong>short voice messages</strong> from different people at a company called KOVA. Each message gives you part of the story. Together, they describe a crisis that the company must manage quickly.</p>
+      <p class="intro-text">After listening, you will work in a <strong>small group</strong>. Each group takes the perspective of a different team. You will discuss the situation from your group's point of view and <strong>prepare a presentation</strong> to share with the class.</p>
+      <div class="scenario-box">
+        <h3>The Scenario — What Happened?</h3>
+        <p>KOVA is a Berlin-based tech startup. Their product, <strong>KOVA Shift</strong>, helps hospitals manage staff schedules automatically. It is used by 72 hospitals across Germany, Belgium, and the Netherlands.<br><br>In <strong>48 hours</strong>, they are launching <strong>KOVA Shift 3.0</strong>, which includes a new feature called <strong>AutoCover</strong> — a system that automatically replaces staff who call in sick. A developer named <strong>Lena Brandt</strong> has just found a serious bug. Their biggest hospital client, <strong>Charité Berlin</strong>, has a public press event planned. The CEO is on a plane. The team is exhausted. One person has already resigned.</p>
       </div>
-      <div class="step">
-        <span class="step-num">02</span>
-        <span class="step-text"><strong>Select your group</strong> using the dropdown below. Your role and presentation brief will appear.</span>
-      </div>
-      <div class="step">
-        <span class="step-num">03</span>
-        <span class="step-text"><strong>Discuss within your group</strong> for 30 minutes. Prepare a clear position on each question in your brief.</span>
-      </div>
-      <div class="step">
-        <span class="step-num">04</span>
-        <span class="step-text"><strong>Present to the class</strong> for 8–10 minutes. Be ready to defend your decisions and challenge other groups.</span>
-      </div>
+      <p class="notice">⚠️ <strong>This is a critical and urgent issue inside the company.</strong> Every person in the organisation is affected — and a decision must be made in the next few hours.</p>
     </div>
-  </section>
+  </div>
 
-  <!-- AUDIO PLAYER -->
-  <section class="audio-section">
-    <div class="section-title">Internal Briefings — Listen in Order</div>
-    <div class="player-card">
+  <!-- 2 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-num">2</div>
+      <div class="card-title">How the Activity Works</div>
+    </div>
+    <div class="card-body">
+      <ol class="steps-list">
+        <li><div class="step-n">1.</div><div><strong>Listen to all five voice messages</strong> in order. You may listen twice. Take notes — details are important.</div></li>
+        <li><div class="step-n">2.</div><div><strong>Find your group.</strong> Your teacher will assign you a group number. Each group represents a different team or perspective.</div></li>
+        <li><div class="step-n">3.</div><div><strong>Read your group brief</strong> using the dropdown in Section 4. It tells you who you are, which messages to focus on, and what to discuss.</div></li>
+        <li><div class="step-n">4.</div><div><strong>Discuss within your group</strong> and agree on your position and recommendations for each question in your brief.</div></li>
+        <li><div class="step-n">5.</div><div><strong>Present your conclusions to the class.</strong> Be ready to explain your decisions and respond to questions from other groups.</div></li>
+      </ol>
+    </div>
+  </div>
 
-      <!-- Now Playing -->
-      <div class="now-playing">
-        <div class="playing-icon idle" id="playingIcon">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-        </div>
-        <div class="now-playing-info">
-          <div class="now-playing-label" id="npLabel">Ready to play</div>
-          <div class="now-playing-name" id="npName">Press play to begin the briefing</div>
-          <div class="now-playing-role" id="npRole">5 messages — listen in order</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div class="waveform paused" id="waveform">
-            <div class="wave-bar"></div>
-            <div class="wave-bar"></div>
-            <div class="wave-bar"></div>
-            <div class="wave-bar"></div>
-            <div class="wave-bar"></div>
-          </div>
-          <div class="track-counter" id="trackCounter">0 / 5</div>
-        </div>
-      </div>
+  <!-- 3 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-num">3</div>
+      <div class="card-title">Voice Messages from Stakeholders — Listen in Order</div>
+    </div>
+    <div class="card-body">
+      <p class="intro-text" style="margin-bottom:16px;">Each message below is from a <strong>different person</strong> involved in the crisis. Click a name to select it, then press play — or press <strong>Play All</strong> to hear them in sequence.</p>
 
-      <!-- Progress -->
-      <div class="progress-wrap">
-        <div class="progress-bar-bg" id="progressBg">
-          <div class="progress-bar-fill" id="progressFill"></div>
-        </div>
-        <div class="time-row">
-          <span id="currentTime">0:00</span>
-          <span id="totalTime">0:00</span>
-        </div>
-      </div>
-
-      <!-- Controls -->
-      <div class="controls">
-        <button class="ctrl-btn" id="prevBtn" onclick="prevTrack()">
-          <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
-          Prev
-        </button>
-        <button class="ctrl-btn play-btn" id="playBtn" onclick="togglePlay()">
-          <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
-          <span id="playLabel">Play Briefing</span>
-        </button>
-        <button class="ctrl-btn" id="nextBtn" onclick="nextTrack()">
-          Next
-          <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zm2.5-6 8.5 6V6z"/></svg>
-        </button>
-      </div>
-
-      <!-- Track List -->
       <div class="track-list" id="trackList"></div>
 
-    </div>
-  </section>
-
-  <!-- GROUP SELECTOR -->
-  <section class="group-section">
-    <div class="section-title">Your Group Brief</div>
-    <p style="font-size:14px;color:var(--text-dim);margin-bottom:16px;font-weight:300;">Select your group number to reveal your role and presentation brief.</p>
-
-    <div class="select-wrap">
-      <select id="groupSelect" onchange="showBrief()">
-        <option value="">— Select your group —</option>
-        <option value="1">Group 1 — Executive Leadership</option>
-        <option value="2">Group 2 — Line Management</option>
-        <option value="3">Group 3 — Human Resources</option>
-        <option value="4">Group 4 — Client Representative</option>
-        <option value="5">Group 5 — Employee Representatives</option>
-      </select>
-      <div class="select-arrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
-      </div>
-    </div>
-
-    <!-- Briefing Cards -->
-    <div id="brief-1" class="briefing-card">
-      <div class="briefing-header">
-        <div>
-          <div class="briefing-group-label">Group 1</div>
-          <div class="briefing-role-title">Executive Leadership Team</div>
+      <div class="player-wrap">
+        <div class="now-playing">
+          <div class="play-avatar" id="playAvatar">—</div>
+          <div style="flex:1">
+            <div class="now-label" id="nowLabel">Ready to play</div>
+            <div class="now-name" id="nowName">Select a message above or press Play All</div>
+            <div class="now-role" id="nowRole">5 voice messages — listen to all of them</div>
+          </div>
+          <div class="waveform paused" id="waveform">
+            <div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div>
+          </div>
+          <div class="msg-count" id="msgCount">0/5</div>
         </div>
-        <div class="briefing-badge">Decision Makers</div>
-      </div>
-      <div class="briefing-body">
-        <div class="briefing-objective">
-          <strong>Your Core Tension</strong>
-          You have invested €18M and 18 months into this launch. Charité Berlin has a public press event in 48 hours with the Senator for Health attending. But a critical patient safety bug has been confirmed. You must decide — and defend — your decision.
+        <div class="progress-bg" id="progressBg"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="time-row"><span id="currentTime">0:00</span><span id="totalTime">0:00</span></div>
+        <div class="controls">
+          <button class="ctrl" onclick="prevTrack()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg> Prev</button>
+          <button class="ctrl primary" id="playBtn" onclick="togglePlay()">
+            <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
+            <span id="playLabel">Play All</span>
+          </button>
+          <button class="ctrl" onclick="nextTrack()">Next <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zm2.5-6 8.5 6V6z"/></svg></button>
         </div>
-        <div class="present-title">Present the Following:</div>
-        <ul class="present-list">
-          <li><span class="li-arrow">→</span><div><strong>Launch decision:</strong> Do you launch, delay, or launch with restrictions? Give clear reasoning using the information from the briefings.</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Client management:</strong> What do you say to Thomas Richter at Charité Berlin, and when? Who makes that call?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Investor communication:</strong> How do you manage the Series B investor who is flying in for the press event?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Trade-off:</strong> What are you prioritising — reputation, revenue, safety, or staff? Be honest about the trade-offs.</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Follow-up actions:</strong> What are the three most important decisions that must be made in the next 12 hours?</div></li>
-        </ul>
       </div>
     </div>
+  </div>
 
-    <div id="brief-2" class="briefing-card">
-      <div class="briefing-header">
-        <div>
-          <div class="briefing-group-label">Group 2</div>
-          <div class="briefing-role-title">Line Management Team</div>
-        </div>
-        <div class="briefing-badge">People First</div>
-      </div>
-      <div class="briefing-body">
-        <div class="briefing-objective">
-          <strong>Your Core Tension</strong>
-          Your team found the bug. They are exhausted, and one person has already resigned. You need to protect your people while delivering a solution that leadership can actually act on. You are the bridge between the engineers and the boardroom.
-        </div>
-        <div class="present-title">Present the Following:</div>
-        <ul class="present-list">
-          <li><span class="li-arrow">→</span><div><strong>Workload assessment:</strong> Based on what you heard, what is realistic to fix in 48 hours versus 3 weeks? Be specific.</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Team protection:</strong> What immediate actions do you take to prevent further resignations? What do you say to Lena Brandt today?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Escalation:</strong> Marcus escalated but felt pressure to launch with a disclaimer. Was that the right move? What would you have done differently?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Accountability:</strong> Who in the management chain failed here, and at what point? How do you address that without losing trust?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Recovery plan:</strong> What does a realistic 3-week fix timeline look like without burning out the remaining team?</div></li>
-        </ul>
-      </div>
+  <!-- 4 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-num">4</div>
+      <div class="card-title">Your Group Brief</div>
     </div>
+    <div class="card-body">
+      <p class="group-intro">Select your group number to see <strong>who you are</strong>, <strong>which messages matter most</strong> for your role, and the <strong>questions to answer</strong> in your presentation.</p>
+      <div class="select-wrap">
+        <select id="groupSelect" onchange="showBrief()">
+          <option value="">— Select your group number —</option>
+          <option value="1">Group 1 — Executive Leadership Team</option>
+          <option value="2">Group 2 — Line Management Team</option>
+          <option value="3">Group 3 — Human Resources</option>
+          <option value="4">Group 4 — Client (Charité Berlin Hospital)</option>
+          <option value="5">Group 5 — Employee Representatives</option>
+        </select>
+        <div class="sel-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></div>
+      </div>
 
-    <div id="brief-3" class="briefing-card">
-      <div class="briefing-header">
-        <div>
-          <div class="briefing-group-label">Group 3</div>
-          <div class="briefing-role-title">Human Resources</div>
+      <!-- BRIEF 1 -->
+      <div id="brief-1" class="briefing-card">
+        <div class="role-header">
+          <div><div class="role-group-tag">Group 1</div><div class="role-title">Executive Leadership Team</div><div class="role-desc">You make the final decision. Everyone is waiting for you.</div></div>
+          <div class="role-badge">Decision Makers</div>
         </div>
-        <div class="briefing-badge">Culture & Wellbeing</div>
-      </div>
-      <div class="briefing-body">
-        <div class="briefing-objective">
-          <strong>Your Core Tension</strong>
-          Sara Osei has one resignation letter and two more people considering leaving. The team feels they were ignored in February when they raised concerns. HR must now act — but also advise leadership on what this crisis reveals about KOVA's culture.
+        <div class="role-body">
+          <div class="rblock tinted"><h4>Who Are You?</h4><p>You are the <strong>senior leadership team at KOVA</strong>. You are responsible for the business, the product, the team, and the company's reputation. You must walk into the noon meeting and make a decision. The press event is in 48 hours, the investor is flying in, and the client is waiting for your call.</p></div>
+          <div class="rblock"><h4>🎧 Focus on These Messages</h4><div class="msg-tags"><div class="msg-tag"><span>MSG 2</span> Marcus — what is technically possible?</div><div class="msg-tag"><span>MSG 3</span> Dr. Jana — what does the CEO want?</div><div class="msg-tag"><span>MSG 4</span> Thomas Richter — what does the client expect?</div><div class="msg-tag"><span>MSG 5</span> Sara — what is the state of the team?</div></div></div>
+          <div class="rblock"><h4>Questions to Answer in Your Presentation</h4>
+            <ul class="present-list">
+              <li><div class="q-num">1.</div><div><strong>Launch Decision</strong> Do you launch in 48 hours, delay, or find another solution? Give clear reasons using what you heard.</div></li>
+              <li><div class="q-num">2.</div><div><strong>Client Communication</strong> What do you say to Thomas Richter at Charité Berlin, and when? Who makes that call?</div></li>
+              <li><div class="q-num">3.</div><div><strong>Investor Management</strong> A Series B investor is flying in for the press event. How do you handle this?</div></li>
+              <li><div class="q-num">4.</div><div><strong>Priorities &amp; Trade-offs</strong> What are you choosing between — safety, reputation, money, or the team? Be honest about what you are giving up.</div></li>
+              <li><div class="q-num">5.</div><div><strong>Next Steps</strong> What are the three most important actions your team must take in the next 12 hours?</div></li>
+            </ul>
+          </div>
         </div>
-        <div class="present-title">Present the Following:</div>
-        <ul class="present-list">
-          <li><span class="li-arrow">→</span><div><strong>Immediate response:</strong> What do you do in the next 24 hours to stabilise morale? Who do you speak to first and what do you say?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>The resignation:</strong> How do you handle the formal resignation letter? Do you try to retain this person, and if so, how?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Culture diagnosis:</strong> Sara said concerns were raised in February and ignored. What does this tell you about how KOVA handles feedback and accountability?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Leadership message:</strong> What do you recommend Dr. Jana Kovač communicates to the entire company today — and how?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Long-term:</strong> What policy or process change would prevent this situation from repeating?</div></li>
-        </ul>
       </div>
+
+      <!-- BRIEF 2 -->
+      <div id="brief-2" class="briefing-card">
+        <div class="role-header">
+          <div><div class="role-group-tag">Group 2</div><div class="role-title">Line Management Team</div><div class="role-desc">You manage the engineers directly. You are the bridge between the developers and the boardroom.</div></div>
+          <div class="role-badge">People Managers</div>
+        </div>
+        <div class="role-body">
+          <div class="rblock tinted"><h4>Who Are You?</h4><p>You are the <strong>direct managers of the engineering team</strong>, led by Marcus Klein. You know the technical details better than the executives. You also know that your team is exhausted — and that Lena, and others, are close to quitting. You must protect your people and give leadership a realistic picture of what is possible.</p></div>
+          <div class="rblock"><h4>🎧 Focus on These Messages</h4><div class="msg-tags"><div class="msg-tag"><span>MSG 1</span> Lena — what exactly is the bug?</div><div class="msg-tag"><span>MSG 2</span> Marcus — what is the honest timeline?</div><div class="msg-tag"><span>MSG 5</span> Sara — what does HR know about the team?</div></div></div>
+          <div class="rblock"><h4>Questions to Answer in Your Presentation</h4>
+            <ul class="present-list">
+              <li><div class="q-num">1.</div><div><strong>Technical Reality</strong> Based on what Lena and Marcus said, what can realistically be fixed in 48 hours — and what cannot?</div></li>
+              <li><div class="q-num">2.</div><div><strong>Protecting the Team</strong> What immediate actions do you take to prevent more resignations? What do you say to Lena today?</div></li>
+              <li><div class="q-num">3.</div><div><strong>Was Escalation Handled Well?</strong> Marcus felt pressure to launch with a disclaimer. Was that the right response? What would you have done differently?</div></li>
+              <li><div class="q-num">4.</div><div><strong>Accountability</strong> At what point did management fail the team — and how do you address this without destroying trust?</div></li>
+              <li><div class="q-num">5.</div><div><strong>Recovery Plan</strong> If the launch is delayed 3 weeks, how do you organise the work without burning out the remaining team?</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- BRIEF 3 -->
+      <div id="brief-3" class="briefing-card">
+        <div class="role-header">
+          <div><div class="role-group-tag">Group 3</div><div class="role-title">Human Resources</div><div class="role-desc">You represent the people behind the crisis. You have a seat at the noon meeting.</div></div>
+          <div class="role-badge">Culture &amp; Wellbeing</div>
+        </div>
+        <div class="role-body">
+          <div class="rblock tinted"><h4>Who Are You?</h4><p>You are the <strong>HR department at KOVA</strong>, led by Sara Osei. You have one formal resignation letter on your desk. Two other employees are considering leaving. You know that the team raised concerns in <strong>February</strong> — and nobody acted. You have a seat at the noon meeting and a responsibility to speak up.</p></div>
+          <div class="rblock"><h4>🎧 Focus on These Messages</h4><div class="msg-tags"><div class="msg-tag"><span>MSG 1</span> Lena — how does she feel? what does she need?</div><div class="msg-tag"><span>MSG 5</span> Sara — what has HR observed?</div><div class="msg-tag"><span>MSG 3</span> Jana — does leadership understand the people problem?</div></div></div>
+          <div class="rblock"><h4>Questions to Answer in Your Presentation</h4>
+            <ul class="present-list">
+              <li><div class="q-num">1.</div><div><strong>Immediate Response</strong> What do you do in the next 24 hours to stabilise morale? Who do you speak to first?</div></li>
+              <li><div class="q-num">2.</div><div><strong>The Resignation</strong> How do you respond to the formal resignation letter? Do you try to keep this person — and if so, how?</div></li>
+              <li><div class="q-num">3.</div><div><strong>Culture Diagnosis</strong> Concerns were raised in February and ignored. What does this tell you about how KOVA manages feedback and accountability?</div></li>
+              <li><div class="q-num">4.</div><div><strong>Leadership Message</strong> What do you recommend Dr. Jana Kovač communicate to the whole company today — and how?</div></li>
+              <li><div class="q-num">5.</div><div><strong>Long-term Change</strong> What one process or policy would prevent this situation from happening again?</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- BRIEF 4 -->
+      <div id="brief-4" class="briefing-card">
+        <div class="role-header">
+          <div><div class="role-group-tag">Group 4</div><div class="role-title">Client — Charité Berlin Hospital</div><div class="role-desc">You have a press event in 48 hours. You have not heard from KOVA.</div></div>
+          <div class="role-badge">External Stakeholder</div>
+        </div>
+        <div class="role-body">
+          <div class="rblock tinted"><h4>Who Are You?</h4><p>You are the team of <strong>Thomas Richter, COO of Charité Berlin</strong>. You have confirmed journalists, the <strong>Senator for Health</strong>, and a public announcement built around Thursday's launch. You left a voicemail this morning and are waiting for Jana to call back — with no idea what is happening inside KOVA.</p></div>
+          <div class="rblock"><h4>🎧 Focus on These Messages</h4><div class="msg-tags"><div class="msg-tag"><span>MSG 4</span> Your own message — what are you asking for?</div><div class="msg-tag"><span>MSG 3</span> Jana — what is KOVA's position?</div><div class="msg-tag"><span>MSG 1</span> Lena — understand the nature of the problem</div></div></div>
+          <div class="rblock"><h4>Questions to Answer in Your Presentation</h4>
+            <ul class="present-list">
+              <li><div class="q-num">1.</div><div><strong>Your Opening Position</strong> When Jana calls, what is your first reaction — angry, understanding, or something in between? Why?</div></li>
+              <li><div class="q-num">2.</div><div><strong>Conditions for Agreement</strong> If KOVA asks for a 3-week delay, what conditions do you set? What would make you end the partnership?</div></li>
+              <li><div class="q-num">3.</div><div><strong>The Press Event</strong> Journalists and the Senator are confirmed. Do you cancel, postpone, or reframe — and how do you communicate this publicly?</div></li>
+              <li><div class="q-num">4.</div><div><strong>Trust</strong> KOVA did not contact you for 24 hours during a crisis. How does this affect your view of the partnership?</div></li>
+              <li><div class="q-num">5.</div><div><strong>Your Responsibility</strong> As a hospital, how do you weigh the risk of the software problem against the disruption of a delay?</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- BRIEF 5 -->
+      <div id="brief-5" class="briefing-card">
+        <div class="role-header">
+          <div><div class="role-group-tag">Group 5</div><div class="role-title">Employee Representatives</div><div class="role-desc">You speak for the development team. For the first time, you have a seat at the leadership meeting.</div></div>
+          <div class="role-badge">Team Voice</div>
+        </div>
+        <div class="role-body">
+          <div class="rblock tinted"><h4>Who Are You?</h4><p>You represent the <strong>KOVA development team</strong>. Lena worked through the night and found the problem. The team raised concerns in <strong>February</strong> — and were ignored. One colleague has already resigned. Now, for the first time, you have been invited to the noon leadership meeting. This is your chance to be heard.</p></div>
+          <div class="rblock"><h4>🎧 Focus on These Messages</h4><div class="msg-tags"><div class="msg-tag"><span>MSG 1</span> Lena — this is your team's experience</div><div class="msg-tag"><span>MSG 2</span> Marcus — what pressure did management apply?</div><div class="msg-tag"><span>MSG 5</span> Sara — what did HR observe about your team?</div></div></div>
+          <div class="rblock"><h4>Questions to Answer in Your Presentation</h4>
+            <ul class="present-list">
+              <li><div class="q-num">1.</div><div><strong>The February Warning</strong> Your team raised concerns two months ago. What should have happened? Who was responsible for listening?</div></li>
+              <li><div class="q-num">2.</div><div><strong>Lena's Situation</strong> She worked through the night and found the problem. What does the company owe her — and what should happen next?</div></li>
+              <li><div class="q-num">3.</div><div><strong>Pressure to Ship</strong> Marcus mentioned pressure to launch and patch quietly later. How does your team feel about this — and why is it dangerous?</div></li>
+              <li><div class="q-num">4.</div><div><strong>Your Demands</strong> You have a seat at the noon meeting. What are the three specific things you are asking leadership to commit to today?</div></li>
+              <li><div class="q-num">5.</div><div><strong>Mission vs Reality</strong> KOVA's mission is "Smarter Shifts. Safer Care." Did the company live up to this? Use specific examples from the messages.</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
 
-    <div id="brief-4" class="briefing-card">
-      <div class="briefing-header">
-        <div>
-          <div class="briefing-group-label">Group 4</div>
-          <div class="briefing-role-title">Client Representative — Charité Berlin</div>
-        </div>
-        <div class="briefing-badge">External Stakeholder</div>
-      </div>
-      <div class="briefing-body">
-        <div class="briefing-objective">
-          <strong>Your Core Tension</strong>
-          You are Thomas Richter's team at Charité Berlin. You have the Senator for Health confirmed, journalists invited, and a public statement already made about this partnership. You have not heard from KOVA in 24 hours. You are about to find out why.
-        </div>
-        <div class="present-title">Present the Following:</div>
-        <ul class="present-list">
-          <li><span class="li-arrow">→</span><div><strong>Your position:</strong> When Jana calls, what is your opening position? Are you angry, understanding, or something in between? Why?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Decision point:</strong> If KOVA asks to delay by 3 weeks, what conditions do you set before agreeing? What would make you walk away entirely?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>The press event:</strong> The Senator is confirmed and journalists are invited. How do you manage this publicly? Do you cancel, postpone, or reframe the event?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Trust:</strong> KOVA did not call you for 24 hours. How does this affect your view of the partnership going forward?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Patient safety:</strong> As a hospital, how do you weigh the safety risk against the operational disruption of a delay?</div></li>
-        </ul>
-      </div>
-    </div>
+</main>
 
-    <div id="brief-5" class="briefing-card">
-      <div class="briefing-header">
-        <div>
-          <div class="briefing-group-label">Group 5</div>
-          <div class="briefing-role-title">Employee Representatives</div>
-        </div>
-        <div class="briefing-badge">Team Voice</div>
-      </div>
-      <div class="briefing-body">
-        <div class="briefing-objective">
-          <strong>Your Core Tension</strong>
-          You represent the development team. Lena found the bug at midnight after working back-to-back days. The team raised concerns in February and were not heard. Now leadership is meeting at noon and you have a seat at the table for the first time. Use it.
-        </div>
-        <div class="present-title">Present the Following:</div>
-        <ul class="present-list">
-          <li><span class="li-arrow">→</span><div><strong>The February warning:</strong> Concerns were raised internally two months ago. What should have happened then? Who was responsible for acting on it?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Lena's situation:</strong> She worked through the night and found a critical bug. How should the company respond to her specifically? What does she deserve?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Pressure to ship:</strong> Marcus mentioned pressure to launch with a disclaimer and patch later. How does the team feel about that approach, and why?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Your demands:</strong> You have a seat at the noon meeting. What are the three things you are asking leadership to commit to today?</div></li>
-          <li><span class="li-arrow">→</span><div><strong>Mission vs reality:</strong> KOVA's mission is safer care. Do you feel the company lived up to that mission in how it handled this situation?</div></li>
-        </ul>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <span>KOVA Technologies — Internal Use Only</span>
-    <span>S8 Leadership Simulation | MS2 EFI</span>
-  </footer>
-
-</div>
+<footer>
+  <strong>KOVA Technologies</strong> &nbsp;·&nbsp; Classroom Simulation — Internal Use Only &nbsp;·&nbsp; MS2 EFI Session 8
+</footer>
 
 <audio id="audioPlayer"></audio>
 
 <script>
   const tracks = [
-    {
-      file: "LENA BRANDT.mp3",
-      name: "Lena Brandt",
-      role: "Senior Developer — Voicemail, 00:14 AM",
-      short: "MSG 01"
-    },
-    {
-      file: "MARCUS KLEIN.mp3",
-      name: "Marcus Klein",
-      role: "Head of Engineering — Morning Message",
-      short: "MSG 02"
-    },
-    {
-      file: "DR. JANA KOVAČ.mp3",
-      name: "Dr. Jana Kovač",
-      role: "Founder & CEO — Airport Message",
-      short: "MSG 03"
-    },
-    {
-      file: "THOMAS RICHTER.mp3",
-      name: "Thomas Richter",
-      role: "COO, Charité Berlin — Client Call",
-      short: "MSG 04"
-    },
-    {
-      file: "SARA OSEI .mp3",
-      name: "Sara Osei",
-      role: "HR Manager — Leadership Pre-Brief",
-      short: "MSG 05"
-    }
+    { file:"LENA BRANDT.mp3",    name:"Lena Brandt",    role:"Senior Developer",    context:"Midnight voicemail to Marcus", initials:"LB" },
+    { file:"MARCUS KLEIN.mp3",   name:"Marcus Klein",   role:"Head of Engineering", context:"Morning message to the team",  initials:"MK" },
+    { file:"DR. JANA KOVAC.mp3", name:"Dr. Jana Kovač", role:"Founder & CEO",       context:"Message from the airport",     initials:"JK" },
+    { file:"THOMAS RICHTER.mp3", name:"Thomas Richter", role:"COO, Charité Berlin", context:"Client voicemail",             initials:"TR" },
+    { file:"SARA OSEI.mp3",      name:"Sara Osei",      role:"HR Manager",          context:"Pre-meeting briefing",         initials:"SO" }
   ];
 
   const audio = document.getElementById('audioPlayer');
-  let currentTrack = 0;
-  let isPlaying = false;
+  let current = -1, playing = false;
 
-  // Build track list
-  function buildTrackList() {
+  function buildTracks() {
     const list = document.getElementById('trackList');
-    list.innerHTML = '';
     tracks.forEach((t, i) => {
-      const item = document.createElement('div');
-      item.className = 'track-item';
-      item.id = `track-${i}`;
-      item.onclick = () => loadTrack(i, true);
-      item.innerHTML = `
-        <div class="track-num">${t.short}</div>
+      const row = document.createElement('div');
+      row.className = 'track-row'; row.id = `tr-${i}`; row.onclick = () => load(i, true);
+      row.innerHTML = `
+        <div class="track-dot"></div>
+        <div class="track-initials">${t.initials}</div>
         <div class="track-info">
-          <div class="track-name">${t.name}</div>
-          <div class="track-role">${t.role}</div>
+          <div class="track-name">${t.name} <span>— ${t.role}</span></div>
+          <div class="track-meta">${t.context}</div>
         </div>
-        <div class="track-duration" id="dur-${i}">—</div>
+        <div class="track-msg-pill">MSG ${i+1}</div>
       `;
-      list.appendChild(item);
+      list.appendChild(row);
     });
   }
 
-  function loadTrack(index, autoPlay = false) {
-    currentTrack = index;
-    const t = tracks[index];
-    audio.src = t.file;
-
-    document.getElementById('npLabel').textContent = t.short + ' — Now Playing';
-    document.getElementById('npName').textContent = t.name;
-    document.getElementById('npRole').textContent = t.role;
-    document.getElementById('trackCounter').textContent = `${index + 1} / ${tracks.length}`;
+  function load(i, play=false) {
+    current = i; const t = tracks[i];
+    audio.src = t.file; audio.load();
+    document.getElementById('nowLabel').textContent = `MSG ${i+1} of 5`;
+    document.getElementById('nowName').textContent = `${t.name} — ${t.role}`;
+    document.getElementById('nowRole').textContent = t.context;
+    document.getElementById('msgCount').textContent = `${i+1}/5`;
     document.getElementById('progressFill').style.width = '0%';
     document.getElementById('currentTime').textContent = '0:00';
-
-    // Update track list styles
-    document.querySelectorAll('.track-item').forEach((el, i) => {
-      el.className = 'track-item' + (i < index ? ' played' : '') + (i === index ? ' active' : '');
+    const av = document.getElementById('playAvatar');
+    av.textContent = t.initials; av.style.background = 'rgba(107,63,160,0.25)'; av.style.color = '#b39ddb'; av.style.border = '1px solid rgba(107,63,160,0.3)';
+    document.querySelectorAll('.track-row').forEach((el, j) => {
+      el.className = 'track-row' + (j < i ? ' played' : '') + (j === i ? ' active' : '');
     });
-
-    // Update icon
-    const icon = document.getElementById('playingIcon');
-    icon.classList.remove('idle');
-
-    if (autoPlay) {
-      audio.play();
-      setPlaying(true);
-    }
+    if (play) audio.play().then(() => setPlay(true)).catch(() => {
+      document.getElementById('nowRole').textContent = '⚠ File not found: ' + t.file + ' — check filename matches exactly';
+    });
   }
 
   function togglePlay() {
-    if (audio.src === '' || audio.src === window.location.href) {
-      loadTrack(0, true);
-      return;
-    }
-    if (isPlaying) {
-      audio.pause();
-      setPlaying(false);
-    } else {
-      audio.play();
-      setPlaying(true);
-    }
+    if (current === -1) { load(0, true); return; }
+    if (playing) { audio.pause(); setPlay(false); }
+    else audio.play().then(() => setPlay(true)).catch(console.warn);
   }
 
-  function setPlaying(state) {
-    isPlaying = state;
-    const btn = document.getElementById('playBtn');
-    const icon = document.getElementById('playIcon');
-    const label = document.getElementById('playLabel');
-    const waveform = document.getElementById('waveform');
-
-    if (state) {
-      icon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-      label.textContent = 'Pause';
-      waveform.classList.remove('paused');
-    } else {
-      icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-      label.textContent = 'Resume';
-      waveform.classList.add('paused');
-    }
+  function setPlay(s) {
+    playing = s;
+    document.getElementById('playIcon').innerHTML = s ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+    document.getElementById('playLabel').textContent = s ? 'Pause' : (current === -1 ? 'Play All' : 'Resume');
+    document.getElementById('waveform').classList.toggle('paused', !s);
   }
 
-  function nextTrack() {
-    if (currentTrack < tracks.length - 1) {
-      loadTrack(currentTrack + 1, isPlaying);
-    }
-  }
-
+  function nextTrack() { if (current < tracks.length - 1) load(current + 1, playing); }
   function prevTrack() {
-    if (currentTrack > 0) {
-      loadTrack(currentTrack - 1, isPlaying);
-    }
+    if (audio.currentTime > 3) audio.currentTime = 0;
+    else if (current > 0) load(current - 1, playing);
   }
 
-  // Progress
   audio.addEventListener('timeupdate', () => {
     if (audio.duration) {
-      const pct = (audio.currentTime / audio.duration) * 100;
-      document.getElementById('progressFill').style.width = pct + '%';
-      document.getElementById('currentTime').textContent = formatTime(audio.currentTime);
+      document.getElementById('progressFill').style.width = (audio.currentTime / audio.duration * 100) + '%';
+      document.getElementById('currentTime').textContent = fmt(audio.currentTime);
     }
   });
-
-  audio.addEventListener('loadedmetadata', () => {
-    document.getElementById('totalTime').textContent = formatTime(audio.duration);
-    const durEl = document.getElementById(`dur-${currentTrack}`);
-    if (durEl) durEl.textContent = formatTime(audio.duration);
-  });
-
+  audio.addEventListener('loadedmetadata', () => { document.getElementById('totalTime').textContent = fmt(audio.duration); });
   audio.addEventListener('ended', () => {
-    if (currentTrack < tracks.length - 1) {
-      setTimeout(() => loadTrack(currentTrack + 1, true), 1000);
-    } else {
-      setPlaying(false);
-      document.getElementById('npLabel').textContent = 'Briefing Complete';
-      document.getElementById('npName').textContent = 'All messages received';
-      document.getElementById('npRole').textContent = 'Select your group below and prepare your presentation';
+    if (current < tracks.length - 1) { setTimeout(() => load(current + 1, true), 700); }
+    else {
+      setPlay(false);
+      document.getElementById('nowLabel').textContent = '✅ All messages received';
+      document.getElementById('nowName').textContent = 'Briefing complete — now select your group below';
+      document.getElementById('nowRole').textContent = 'Scroll down to Section 4';
+      document.getElementById('playAvatar').textContent = '✓';
+      document.getElementById('playAvatar').style.background = 'rgba(26,106,58,0.2)';
+      document.getElementById('playAvatar').style.color = '#2d8a4e';
     }
   });
-
-  // Click progress bar to seek
-  document.getElementById('progressBg').addEventListener('click', (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pct = (e.clientX - rect.left) / rect.width;
-    audio.currentTime = pct * audio.duration;
+  document.getElementById('progressBg').addEventListener('click', e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    if (audio.duration) audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
   });
+  function fmt(s) { if (!s || isNaN(s)) return '0:00'; return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
 
-  function formatTime(s) {
-    if (!s || isNaN(s)) return '0:00';
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60).toString().padStart(2, '0');
-    return `${m}:${sec}`;
-  }
-
-  // Group briefing
   function showBrief() {
-    const val = document.getElementById('groupSelect').value;
+    const v = document.getElementById('groupSelect').value;
     document.querySelectorAll('.briefing-card').forEach(el => el.classList.remove('visible'));
-    if (val) {
-      document.getElementById(`brief-${val}`).classList.add('visible');
-      document.getElementById(`brief-${val}`).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+    if (v) { const el = document.getElementById(`brief-${v}`); el.classList.add('visible'); setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50); }
   }
 
-  // Init
-  buildTrackList();
+  buildTracks();
 </script>
 </body>
 </html>
